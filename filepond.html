@@ -28,19 +28,75 @@
         // FilePond.parse(document.body);
         $('#filepond').filepond({
             allowMultiple: true,
+            server: "/file/upload",
+            instantUpload: false,
+            files: [
+                {
+                    source: '12345',
+                    options: {
+                        type: 'local',
+                        file: {
+                            name: 'my-file.png',
+                            size: 3001025,
+                            type: 'image/png',
+                        },
+                    },
+                },
+                {
+                    source: '12345',
+                    options: {
+                        type: 'local',
+                        file: {
+                            name: 'my-file.png',
+                            size: 3001025,
+                            type: 'image/png',
+                        },
+                    },
+                },
+            ],
+
         });
 
-        $('#filepond').on('FilePond:addfile', function (e) {
-            console.log('file added event', e);
+        $('#filepond').on('FilePond:addfile', function (event, file) {
+            console.log('file added event, file **** ', event, file);
         });
-        
+        $('#filepond').on('FilePond:init', function (event) {
+            console.log('file init event **** ', event);
+        });
+        $('#filepond').on('FilePond:error', function (event, file, status) {
+            console.log('file error event, file, status **** ', event, file, status);
+        });
+        $('#filepond').on('FilePond:removefile', function (event, file) {
+            console.log('file removefile event, file, status **** ', event, file);
+        });
+
         $("#btnAdd").on("click", () => {
-            console.log("btnAdd **** ");
             $('#filepond')
-                .filepond('addFile', 'index.html')
+                .filepond('addFile', "1.jpg", {type: "local", file: {name: "2.jpg", size: 1234, type: "image/jpeg"}})
                 .then(function (file) {
                     console.log('file added', file);
                 });
+
+            // $('#filepond')
+            //     .filepond('addFile', {source: "12345", options: {type: "local", file: {name: "12345.txt", size: 12345, type: "image/png"}}})
+            //     .then(function (file) {
+            //         console.log('file added', file);
+            //     });
+
+            // 동작하지 않음
+            // $("#filepond").filepond("files",
+            //     {
+            //         source: '12345',
+            //         options: {
+            //             type: 'local',
+            //             file: {
+            //                 name: 'my-file.png',
+            //                 size: 3001025,
+            //                 type: 'image/png',
+            //             },
+            //         },
+            //     },
+            // );
         });
     </script>
 
