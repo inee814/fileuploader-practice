@@ -28,8 +28,15 @@
         // FilePond.parse(document.body);
         $('#filepond').filepond({
             allowMultiple: true,
-            server: "/file/upload",
-            instantUpload: false,
+            server: {
+                url: "http://127.0.0.1:8888",
+                process: {
+                    url: "./file/upload",
+                    timeout: 2000,
+                },
+            },
+            instantUpload: true,
+            styleButtonRemoveItemPosition: "right",
             files: [
                 {
                     source: '12345',
