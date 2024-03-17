@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>FilePond</title>
+
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="./css/filepond-plugin-get-file.min.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+    <script src="./js/filepond-plugin-get-file.min.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script> -->
+
+</head>
+
+<body>
+
+    <form id="form1" name="form1">
+        <input type="file" id="filepond" name="file" class="filepond" />
+        <button type="button" id="btnAdd">Add</button>
+    </form>
+
+    <script>
+        // $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+        // $.fn.filepond.registerPlugin(FilePondPluginGetFile);
+
+        $('#filepond').filepond({
+            allowMultiple: true,
+            allowRevert: true,
+            // labelButtonDownloadItem: 'custom label', // by default 'Download file'
+            // allowDownloadByUrl: true, // by default downloading by URL disabled
+            server: {
+                url: "http://127.0.0.1:8080/file",
+                process: {
+                    url: "/process",
+                    timeout: 5000,
+                    method: "POST",
+                    // headers: {
+                    //     "Content-Type": "multipart/form-data",
+                    // },
+                    onload: function(response) {
+                        console.log("process onload response **** ", response, JSON.parse(response));
+                        console.log("process onload this **** ", this);
+
+                        // const file = $('#filepond').filepond("getFile", 0).file;
+                        // const link = document.createElement("a");
+                        // link.download = file.name;
+                        // link.href = URL.createObjectURL(file);
+                        // link.click();
+                        
+//                         const fileItem = FilePond.getFile();
+// const file = fileItem.file;
+// const link = document.createElement('a');
+// link.download = file.name;
+// link.href = URL.createObjectURL(file);
+// link.click();
+
+                    },
+                    onerror: function(error) {
+                        console.log("process onerror error**** ", error);
+                    },
+                    ondata: function(formData) {
+                        console.log("process ondata formData**** ", formData);
+                        //return new FormData();
+                        formData.append("param1", "1111");
+                        formData.append("param2", "2222");
+                        return formData;
+                    },
+                },
+                revert: {
+                    url: "/revert",
+                    // timeout: 5000,
+                    // method: "POST",
+                    // headers: {
+                    //     "Content-Type": "application/json",
+                    // },
+                    onload: function(response) {
+                        console.log("revert onload response**** ", response);
+                    },
+                    onerror: function(error) {
+                        console.log("revert onerror error**** ", error);
+                    },
+                    // ondata: function(formData) {
+                    //     console.log("process ondata formData**** ", formData);
+                    //     //return new FormData();
+                    //     formData.append("param1", "1111");
+                    //     formData.append("param2", "2222");
+                    //     return formData;
+                    // },
+                },
+                // load: {
+                //     url: "/load",
+                //     // timeout: 5000,
+                //     // method: "POST",
+                //     // headers: {
+                //     //     "Content-Type": "multipart/form-data",
+                //     // },
+                //     onload: function(response) {
+                //         console.log("load onload response**** ", response);
+                //     },
+                //     onerror: function(error) {
+                //         console.log("load onerror error**** ", error);
+                //     },
+                //     // ondata: function(formData) {
+                //     //     console.log("process ondata formData**** ", formData);
+                //     //     //return new FormData();
+                //     //     formData.append("param1", "1111");
+                //     //     formData.append("param2", "2222");
+                //     //     return formData;
+                //     // },
+                // },
+                load: (source, load, error, progress, abort, headers) => {
+				    console.log('attempting to load', source);
+				// implement logic to load file from server here
+				// https://pqina.nl/filepond/docs/patterns/api/server/#load-1
+			    },
+                fetch: {
+                    url: "/fetch",
+                    // timeout: 5000,
+                    // method: "POST",
+                    // headers: {
+                    //     "Content-Type": "multipart/form-data",
+                    // },
+                    onload: function(response) {
+                        console.log("fetch onload response**** ", response);
+                    },
+                    onerror: function(error) {
+                        console.log("fetch onerror error**** ", error);
+                    },
+                    // ondata: function(formData) {
+                    //     console.log("process ondata formData**** ", formData);
+                    //     //return new FormData();
+                    //     formData.append("param1", "1111");
+                    //     formData.append("param2", "2222");
+                    //     return formData;
+                    // },
+                },
+            },
+            instantUpload: true,
+            styleButtonRemoveItemPosition: "right",
+            files: [
+                {
+                    source: 'http://127.0.0.1:8080/fetch',
+                    options: {
+                        type: 'limbo',
+                        file: {
+                            name: 'my-file.png',
+                            size: 3001025,
+                            type: 'image/png',
+                        },
+                    },
+                },
+                {
+                    source: '12345',
+                    options: {
+                        type: 'local',
+                        file: {
+                            name: 'my-file.png',
+                            size: 3001025,
+                            type: 'image/png',
+                        },
+                    },
+                },
+            ],
+
+        });
+
+        $('#filepond').on('FilePond:addfile', function (event, file) {
+            console.log('file added event, file **** ', event, file);
+        });
+        $('#filepond').on('FilePond:init', function (event) {
+            console.log('file init event **** ', event);
+        });
+        $('#filepond').on('FilePond:error', function (event, file, status) {
+            console.log('file error event, file, status **** ', event, file, status);
+        });
+        $('#filepond').on('FilePond:removefile', function (event, file) {
+            console.log('file removefile event, file **** ', event, file);
+        });
+        $('#filepond').on('FilePond:activatefile', function (event, file) {
+            console.log('file activatefile event, file **** ', event, file);
+        });
+
+        $("#btnAdd").on("click", () => {
+            $('#filepond')
+                .filepond('addFile', "1.jpg", {type: "local", file: {name: "2.jpg", size: 1234, type: "image/jpeg"}})
+                .then(function (file) {
+                    console.log('file added', file);
+                });
+
+            // $('#filepond')
+            //     .filepond('addFile', {source: "12345", options: {type: "local", file: {name: "12345.txt", size: 12345, type: "image/png"}}})
+            //     .then(function (file) {
+            //         console.log('file added', file);
+            //     });
+
+            // 동작하지 않음
+            // $("#filepond").filepond("files",
+            //     {
+            //         source: '12345',
+            //         options: {
+            //             type: 'local',
+            //             file: {
+            //                 name: 'my-file.png',
+            //                 size: 3001025,
+            //                 type: 'image/png',
+            //             },
+            //         },
+            //     },
+            // );
+        });
+    </script>
+
+</body>
+
+</html>
