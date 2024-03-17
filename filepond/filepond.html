@@ -95,8 +95,39 @@
                     //     return formData;
                     // },
                 },
+                restore: './restore/',
+                load: (source, load, error, progress, abort, headers) => {
+                    alert(1);
+                    console.log("load source, load, error, progress, abort, headers **** ", source, load, error, progress, abort, headers);
+                    // Should request a file object from the server here
+                    // ...
+
+                    // Can call the error method if something is wrong, should exit after
+                    error('oh my goodness');
+
+                    // Can call the header method to supply FilePond with early response header string
+                    // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/getAllResponseHeaders
+                    headers(headersString);
+
+                    // Should call the progress method to update the progress to 100% before calling load
+                    // (endlessMode, loadedSize, totalSize)
+                    progress(true, 0, 1024);
+
+                    // Should call the load method with a file object or blob when done
+                    load(file);
+
+                    // Should expose an abort method so the request can be cancelled
+                    return {
+                        abort: () => {
+                            // User tapped cancel, abort our ongoing actions here
+
+                            // Let FilePond know the request has been cancelled
+                            abort();
+                        },
+                    };
+                },
                 // load: {
-                //     url: "/load",
+                //     url: "/load/",
                 //     // timeout: 5000,
                 //     // method: "POST",
                 //     // headers: {
@@ -116,45 +147,105 @@
                 //     //     return formData;
                 //     // },
                 // },
-                load: (source, load, error, progress, abort, headers) => {
-				    console.log('attempting to load', source);
-				// implement logic to load file from server here
-				// https://pqina.nl/filepond/docs/patterns/api/server/#load-1
-			    },
-                fetch: {
-                    url: "/fetch",
-                    // timeout: 5000,
-                    // method: "POST",
-                    // headers: {
-                    //     "Content-Type": "multipart/form-data",
-                    // },
-                    onload: function(response) {
-                        console.log("fetch onload response**** ", response);
-                    },
-                    onerror: function(error) {
-                        console.log("fetch onerror error**** ", error);
-                    },
-                    // ondata: function(formData) {
-                    //     console.log("process ondata formData**** ", formData);
-                    //     //return new FormData();
-                    //     formData.append("param1", "1111");
-                    //     formData.append("param2", "2222");
-                    //     return formData;
-                    // },
+                // load: (source, load, error, progress, abort, headers) => {
+				//     console.log('attempting to load', source);
+				// // implement logic to load file from server here
+				// // https://pqina.nl/filepond/docs/patterns/api/server/#load-1
+			    // },
+                fetch: (url, load, error, progress, abort, headers) => {
+                    alert(2);
+                    console.log("fecth url, load, error, progress, abort, header **** ", url, load, error, progress, abort, header);
+                    // Should get a file object from the URL here
+                    // ...
+
+                    // Can call the error method if something is wrong, should exit after
+                    error('oh my goodness');
+
+                    // Can call the header method to supply FilePond with early response header string
+                    // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/getAllResponseHeaders
+                    headers(headersString);
+
+                    // Should call the progress method to update the progress to 100% before calling load
+                    // (computable, loadedSize, totalSize)
+                    progress(true, 0, 1024);
+
+                    // Should call the load method with a file object when done
+                    load(file);
+
+                    // Should expose an abort method so the request can be cancelled
+                    return {
+                        abort: () => {
+                            // User tapped abort, cancel our ongoing actions here
+
+                            // Let FilePond know the request has been cancelled
+                            abort();
+                        },
+                    }
+                },
+                // fetch: {
+                //     url: "/fetch/",
+                //     // timeout: 5000,
+                //     // method: "POST",
+                //     // headers: {
+                //     //     "Content-Type": "multipart/form-data",
+                //     // },
+                //     onload: function(response) {
+                //         console.log("fetch onload response**** ", response);
+                //     },
+                //     onerror: function(error) {
+                //         console.log("fetch onerror error**** ", error);
+                //     },
+                //     // ondata: function(formData) {
+                //     //     console.log("process ondata formData**** ", formData);
+                //     //     //return new FormData();
+                //     //     formData.append("param1", "1111");
+                //     //     formData.append("param2", "2222");
+                //     //     return formData;
+                //     // },
+                // },
+                restore: (uniqueFileId, load, error, progress, abort, headers) => {
+                    console.log("restore uniqueFileId, load, error, progress, abort, headers **** ", uniqueFileId, load, error, progress, abort, headers);
+                    // Should get the temporary file object from the server
+                    // ...
+
+                    // Can call the error method if something is wrong, should exit after
+                    error('oh my goodness');
+
+                    // Can call the header method to supply FilePond with early response header string
+                    // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/getAllResponseHeaders
+                    headers(headersString);
+
+                    // Should call the progress method to update the progress to 100% before calling load
+                    // (computable, loadedSize, totalSize)
+                    progress(true, 0, 1024);
+
+                    // Should call the load method with a file object when done
+                    load(serverFileObject);
+
+                    // Should expose an abort method so the request can be cancelled
+                    return {
+                        abort: () => {
+                            // User tapped abort, cancel our ongoing actions here
+
+                            // Let FilePond know the request has been cancelled
+                            abort();
+                        }
+                    };
                 },
             },
             instantUpload: true,
             styleButtonRemoveItemPosition: "right",
             files: [
                 {
-                    source: 'http://127.0.0.1:8080/fetch',
+                    source: 'http://127.0.0.1:5500/resources/nature.jpg',
                     options: {
-                        type: 'limbo',
-                        file: {
-                            name: 'my-file.png',
-                            size: 3001025,
-                            type: 'image/png',
-                        },
+                        // type: 'limbo',
+                        type: 'local',
+                        // file: {
+                        //     name: 'my-file.png',
+                        //     size: 3001025,
+                        //     type: 'image/png',
+                        // },
                     },
                 },
                 {
@@ -190,7 +281,7 @@
 
         $("#btnAdd").on("click", () => {
             $('#filepond')
-                .filepond('addFile', "1.jpg", {type: "local", file: {name: "2.jpg", size: 1234, type: "image/jpeg"}})
+                .filepond('addFile', "http://127.0.0.1:5500/resources/nature.jpg", {type: "limbo", file: {name: "2.jpg", size: 1234, type: "image/jpeg"}})
                 .then(function (file) {
                     console.log('file added', file);
                 });
