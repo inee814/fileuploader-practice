@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>uppy</title>
+    <link href="https://releases.transloadit.com/uppy/v3.23.0/uppy.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script type="module">
+        import { Uppy, XHRUpload, Dashboard, Form, Url } from "https://releases.transloadit.com/uppy/v3.23.0/uppy.min.mjs"
+        // new Uppy().use(XHRUpload, { endpoint: 'https://tusd.tusdemo.net/files' })
+
+        const uppy = new Uppy({ debug: true, autoProceed: false })
+            .use(Dashboard, {
+                inline: true,
+                target: '#uppy',
+                showLinkToFileUploadResult: true,
+                showProgressDetails: true,
+                showRemoveButtonAfterComplete: true,
+                singleFileFullScreen: false,
+                disableThumbnailGenerator: true,
+            })
+            .use(XHRUpload, { endpoint: 'http://127.0.0.1:8080/file/process' })
+            .use(Url, {
+                target: Dashboard,
+                companionUrl: 'http://127.0.0.1:8080/file/download',
+            });
+
+        uppy.on('file-added', (file) => {
+            console.log(file);
+            uppy.setFileMeta(file.id, {
+            size: file.size,
+            });
+        });
+        uppy.on('success', (fileCount) => {
+            console.log(`${fileCount} files uploaded`)
+        });
+        uppy.on('complete', (result) => {
+            if (result.failed.length === 0) {
+            console.log('Upload successful 😀')
+            } else {
+            console.warn('Upload failed 😞')
+            }
+            console.log('successful files:', result.successful)
+            console.log('failed files:', result.failed)
+        });
+    </script>
+    <style>
+    </style>
+</head>
+
+<body>
+
+    <div id="uppy"></div>
+
+
+    <script>
+
+
+
+    </script>
+
+</body>
+
+</html>
