@@ -33,6 +33,9 @@
                 <button type="button" id="trigger-upload" class="btn btn-primary">
                     <i class="icon-upload icon-white"></i> Upload
                 </button>
+                <button type="button" id="trigger-initial-files" class="btn btn-primary">
+                    <i class="icon-upload icon-white"></i> Upload
+                </button>
             </div>
             <span class="qq-drop-processing-selector qq-drop-processing">
                 <span>Processing dropped files...</span>
@@ -116,59 +119,77 @@
     <!-- Your code to create an instance of Fine Uploader and bind to the DOM/template
     ====================================================================== -->
     <script>
-        $('#uploader1').fineUploader({
-            template: 'qq-template-manual-trigger',
-            request: {
-                endpoint: 'http://127.0.0.1:8080/file/process',
-                inputName: "file",
-            },
-            thumbnails: {
-                placeholders: {
-                    waitingPath: '/source/placeholders/waiting-generic.png',
-                    notAvailablePath: '/source/placeholders/not_available-generic.png'
-                }
-            },
-            autoUpload: true,
-            callbacks: {
-                onComplete: function(id, name, response, xhr) {
-                    console.log("onComplete this, id, name, response, xhr **** ", this, id, name, response, xhr);
-                    $(`li.qq-file-id-${id} span.qq-upload-file-selector`).on("click", () => {
-                        download(this, id);
-                    });
-                }
-            },
+        var uploader1 = new qq.FineUploader({
+            element: document.getElementById("uploader1"),
+            // validation: {
+            //     allowedExtensions: ["jpeg", "jpg"],
+            //     sizeLimit: 5000000 // 5 MiB
+            // },
         });
 
-        $('#uploader2').fineUploader({
-            template: 'qq-template-manual-trigger',
-            request: {
-                endpoint: 'http://127.0.0.1:8080/file/process',
-                inputName: "file",
-            },
-            thumbnails: {
-                placeholders: {
-                    waitingPath: '/source/placeholders/waiting-generic.png',
-                    notAvailablePath: '/source/placeholders/not_available-generic.png'
-                }
-            },
-            autoUpload: true,
-            callbacks: {
-                onComplete: function(id, name, response, xhr) {
-                    console.log("onComplete this, id, name, response, xhr **** ", this, id, name, response, xhr);
+        // $('#uploader1').fineUploader({
+        //     template: 'qq-template-manual-trigger',
+        //     request: {
+        //         endpoint: 'http://127.0.0.1:8080/file/process',
+        //         inputName: "file",
+        //     },
+        //     thumbnails: {
+        //         placeholders: {
+        //             waitingPath: '/source/placeholders/waiting-generic.png',
+        //             notAvailablePath: '/source/placeholders/not_available-generic.png'
+        //         }
+        //     },
+        //     autoUpload: true,
+        //     callbacks: {
+        //         onComplete: function(id, name, response, xhr) {
+        //             console.log("onComplete this, id, name, response, xhr **** ", this, id, name, response, xhr);
 
-                    this.setUuid(id, response.uid);
-                    const $selector = $(`li.qq-file-id-${id} span.qq-upload-file-selector`);
-                    $selector.data("uid", response.uid);
-                    $selector.on("click", () => {
-                        download(this, id);
-                    });
-                }
-            },
-        });
+        //             this.setUuid(id, response.uid);
+        //             const $selector = $(`li.qq-file-id-${id} span.qq-upload-file-selector`);
+        //             $selector.data("uid", response.uid);
+        //             $selector.on("click", () => {
+        //                 download(this, id);
+        //             });
+        //         }
+        //     },
+        // });
+
+        // $('#uploader2').fineUploader({
+        //     template: 'qq-template-manual-trigger',
+        //     request: {
+        //         endpoint: 'http://127.0.0.1:8080/file/process',
+        //         inputName: "file",
+        //     },
+        //     thumbnails: {
+        //         placeholders: {
+        //             waitingPath: '/source/placeholders/waiting-generic.png',
+        //             notAvailablePath: '/source/placeholders/not_available-generic.png'
+        //         }
+        //     },
+        //     autoUpload: true,
+        //     callbacks: {
+        //         onComplete: function(id, name, response, xhr) {
+        //             console.log("onComplete this, id, name, response, xhr **** ", this, id, name, response, xhr);
+
+        //             this.setUuid(id, response.uid);
+        //             const $selector = $(`li.qq-file-id-${id} span.qq-upload-file-selector`);
+        //             $selector.data("uid", response.uid);
+        //             $selector.on("click", () => {
+        //                 download(this, id);
+        //             });
+        //         }
+        //     },
+        // });
 
         $('#trigger-upload').click(function() {
             $('#uploader1').fineUploader('uploadStoredFiles');
         });
+
+        $('#trigger-initial-files').click(function() {
+            console.log("trigger-initial-files");
+            add
+        });
+
 
         const download = (uploader, id) => {
             console.log("download uploader, id **** ", uploader, id);
